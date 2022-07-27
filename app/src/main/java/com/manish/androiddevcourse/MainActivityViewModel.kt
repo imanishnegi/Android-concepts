@@ -1,15 +1,15 @@
 package com.manish.androiddevcourse
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class MainActivityViewModel : ViewModel() {
-    private var count = 0
+class MainActivityViewModel(initialCount: Int) : ViewModel() {
+    private val _count = MutableLiveData(initialCount)
+    val count: LiveData<Int>
+        get() = _count
 
-    fun getCurrentCount() : Int {
-        return count
-    }
-
-    fun getUpdatedCount() : Int {
-        return ++count
+    fun updateCount() {
+        _count.value = count.value?.inc() ?: -1
     }
 }
