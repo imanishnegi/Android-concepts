@@ -16,6 +16,5 @@ class MainActivity : AppCompatActivity() {
         viewModelFactory = MainActivityViewModelFactory(50)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
         binding.lifecycleOwner = this
-        binding.viewmodel = viewModel
     }
 }
