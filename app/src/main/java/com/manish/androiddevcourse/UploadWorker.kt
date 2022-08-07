@@ -6,6 +6,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import java.lang.Exception
 
+/**
+ * This is the worker class containing the work description
+ */
 class UploadWorker(context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
     override fun doWork(): Result {

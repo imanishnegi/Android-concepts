@@ -19,9 +19,14 @@ class WorkManagerActivity : AppCompatActivity() {
     }
 
     private fun startOneTimeWork() {
+        //getting the workmanager instance
         val workManager = WorkManager.getInstance(applicationContext)
+        //making the work request (One time work request)
         val uploadRequest = OneTimeWorkRequest.Builder(UploadWorker::class.java).build()
+        //enqueuing the work request
         workManager.enqueue(uploadRequest)
+
+        //adding a listener (live data observer) to get the status of the work enqueued
         workManager.getWorkInfoByIdLiveData(uploadRequest.id).observe(this) {
             findViewById<TextView>(R.id.textView).text = it.state.name
         }
