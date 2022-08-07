@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 
@@ -21,8 +22,13 @@ class WorkManagerActivity : AppCompatActivity() {
     private fun startOneTimeWork() {
         //getting the workmanager instance
         val workManager = WorkManager.getInstance(applicationContext)
+        //setting constraints to be met for the work request to run (now the work will run only when phone is charging)
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true).build()
         //making the work request (One time work request)
-        val uploadRequest = OneTimeWorkRequest.Builder(UploadWorker::class.java).build()
+        val uploadRequest = OneTimeWorkRequest.Builder(UploadWorker::class.java)
+            .setConstraints(constraints)
+            .build()
         //enqueuing the work request
         workManager.enqueue(uploadRequest)
 
