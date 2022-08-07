@@ -34,14 +34,30 @@ class WorkManagerActivity : AppCompatActivity() {
 
         //sending input data to the workmanager
         val inputData = Data.Builder()
-            .putInt(KEY_INPUT_DATA, 200)
+            .putInt(KEY_INPUT_DATA, 300000)
             .build()
         //making the work request (One time work request)
         val uploadRequest = OneTimeWorkRequest.Builder(UploadWorker::class.java)
             .setConstraints(constraints)
             .build()
+
+        val filteringRequest = OneTimeWorkRequest.Builder(FilteringWorker::class.java)
+            .build()
+
+        val downloadingRequest = OneTimeWorkRequest.Builder(DownloadingWorker::class.java)
+            .build()
+
+        val compressingRequest = OneTimeWorkRequest.Builder(CompressingWorker::class.java)
+            .build()
+
+        // to enqueue parallel work request we need to add the work requests to a mutable list
+        val parallelWorkRequests = mutableListOf(downloadingRequest, filteringRequest)
         //enqueuing the work request
-        workManager.enqueue(uploadRequest)
+        workManager
+            .beginWith(parallelWorkRequests)
+            .then(compressingRequest)
+            .then(uploadRequest)
+            .enqueue()
 
         //adding a listener (live data observer) to get the status of the work enqueued
         workManager.getWorkInfoByIdLiveData(uploadRequest.id).observe(this) {
