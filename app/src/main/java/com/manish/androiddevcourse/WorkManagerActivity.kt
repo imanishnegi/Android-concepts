@@ -6,10 +6,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
+import java.util.concurrent.TimeUnit
 
 class WorkManagerActivity : AppCompatActivity() {
     companion object {
@@ -21,8 +19,17 @@ class WorkManagerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_work_manager)
 
         findViewById<Button>(R.id.btn_start_work).setOnClickListener {
-            startOneTimeWork()
+//            startOneTimeWork()
+            setPeriodicWorkRequest()
         }
+    }
+
+    private fun setPeriodicWorkRequest() {
+        val periodicWorkRequest =
+            PeriodicWorkRequest.Builder(DownloadingWorker::class.java, 16, TimeUnit.MINUTES)
+                .build()
+        WorkManager.getInstance(applicationContext)
+            .enqueue(periodicWorkRequest)
     }
 
     private fun startOneTimeWork() {
